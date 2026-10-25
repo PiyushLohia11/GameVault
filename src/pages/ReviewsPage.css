@@ -1,0 +1,1216 @@
+/* ========================================================================= */
+/* Reviews Page Styles — Master Critique Archive & Telemetry Theme            */
+/* Anton headings, Lexend body, #040404 canvas, #F4BF4E gold accent,         */
+/* liquid glass cards, and specular highlights.                              */
+/* ========================================================================= */
+
+.reviews-page {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 20px 64px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+  animation: revFadeIn 0.3s ease-out;
+}
+
+@keyframes revFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Glass Liquid Card Surface */
+.rev-glass-card {
+  background: rgba(18, 18, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.rev-glass-card.gold-glow {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 0 24px rgba(244, 191, 78, 0.2), 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+}
+
+/* ========================================================================= */
+/* 1. Header & View Mode Switcher                                            */
+/* ========================================================================= */
+
+.rev-header-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rev-tracker-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #F4BF4E;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rev-header-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 1024px) {
+  .rev-header-row {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.rev-title-group {
+  max-width: 800px;
+}
+
+.rev-page-title {
+  font-family: var(--font-heading);
+  font-size: 44px;
+  line-height: 1.05;
+  letter-spacing: 0.03em;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  margin: 0;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+}
+
+.rev-page-description {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  color: #A1A1AA;
+  margin: 6px 0 0 0;
+}
+
+/* View Tab Pills */
+.rev-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  background: rgba(14, 14, 14, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  align-self: flex-start;
+}
+
+@media (min-width: 1024px) {
+  .rev-tabs-bar {
+    align-self: auto;
+  }
+}
+
+.rev-tab-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: #A1A1AA;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.rev-tab-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.rev-tab-btn.active {
+  background: #F4BF4E;
+  color: #040404;
+  font-weight: 700;
+  box-shadow: 0 0 16px rgba(244, 191, 78, 0.35);
+}
+
+.rev-tab-badge {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.25);
+  font-weight: 700;
+}
+
+/* ========================================================================= */
+/* 2. Telemetry KPI Strip (4 Cards)                                          */
+/* ========================================================================= */
+
+.rev-telemetry-strip {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .rev-telemetry-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .rev-telemetry-strip {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.rev-kpi-card {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  transition: all 0.25s ease;
+}
+
+.rev-kpi-card:hover {
+  border-color: rgba(244, 191, 78, 0.35);
+  transform: translateY(-2px);
+}
+
+.rev-kpi-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rev-kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #A1A1AA;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rev-kpi-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #F4BF4E;
+}
+
+.rev-kpi-icon-box.gold {
+  background: rgba(244, 191, 78, 0.15);
+  border-color: rgba(244, 191, 78, 0.35);
+}
+
+.rev-kpi-icon-box.green {
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.3);
+  color: #34D399;
+}
+
+.rev-kpi-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.rev-kpi-number {
+  font-family: var(--font-heading);
+  font-size: 34px;
+  line-height: 1;
+  color: #FFFFFF;
+}
+
+.rev-kpi-subtext {
+  font-size: 12px;
+  color: #F4BF4E;
+  font-weight: 600;
+}
+
+.rev-kpi-subtext.green {
+  color: #34D399;
+}
+
+.rev-kpi-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.rev-kpi-progress-fill {
+  height: 100%;
+  background: #F4BF4E;
+  border-radius: 9999px;
+}
+
+.rev-kpi-desc {
+  font-size: 11.5px;
+  color: #71717A;
+  margin: 0;
+}
+
+/* ========================================================================= */
+/* 3. Main Two-Column Layout (7-8 cols left / 4-5 cols right)               */
+/* ========================================================================= */
+
+.rev-main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+@media (min-width: 1024px) {
+  .rev-main-grid {
+    grid-template-columns: 7fr 5fr;
+  }
+}
+
+@media (min-width: 1280px) {
+  .rev-main-grid {
+    grid-template-columns: 8fr 4fr;
+  }
+}
+
+/* Left Column: Feed & Controls */
+.rev-feed-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Filter Toolbar */
+.rev-filter-toolbar {
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rev-toolbar-top-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .rev-toolbar-top-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.rev-search-box {
+  position: relative;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .rev-search-box {
+    max-width: 260px;
+  }
+}
+
+.rev-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #71717A;
+  pointer-events: none;
+}
+
+.rev-search-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 14px 0 38px;
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 13px;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.rev-search-input:focus {
+  border-color: #F4BF4E;
+  box-shadow: 0 0 10px rgba(244, 191, 78, 0.2);
+}
+
+.rev-select-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .rev-select-controls-row {
+    width: auto;
+  }
+}
+
+.rev-custom-select {
+  height: 38px;
+  padding: 0 32px 0 12px;
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  transition: all 0.2s;
+}
+
+.rev-custom-select:focus {
+  border-color: #F4BF4E;
+}
+
+.rev-select-wrap {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .rev-select-wrap {
+    width: auto;
+  }
+}
+
+.rev-select-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #71717A;
+}
+
+/* Rating Filter Pills Row */
+.rev-filter-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.rev-filter-chip {
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #A1A1AA;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.rev-filter-chip:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.rev-filter-chip.active {
+  background: rgba(244, 191, 78, 0.15);
+  border-color: #F4BF4E;
+  color: #F4BF4E;
+  font-weight: 600;
+}
+
+/* ========================================================================= */
+/* 4. Review Cards Feed                                                      */
+/* ========================================================================= */
+
+.rev-cards-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rev-feed-card {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.2s ease;
+}
+
+.rev-feed-card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+
+.rev-feed-card.my-review {
+  border-color: rgba(244, 191, 78, 0.35);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 0 20px rgba(244, 191, 78, 0.12);
+}
+
+/* Card Header: Cover, Title, Score */
+.rev-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@media (min-width: 640px) {
+  .rev-card-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.rev-card-game-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.rev-game-thumb-link {
+  width: 64px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+  display: block;
+  background: #111113;
+  transition: transform 0.2s ease;
+}
+
+.rev-game-thumb-link:hover {
+  transform: scale(1.03);
+}
+
+.rev-game-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rev-game-meta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rev-verification-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rev-verified-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: rgba(244, 191, 78, 0.15);
+  border: 1px solid rgba(244, 191, 78, 0.4);
+  color: #F4BF4E;
+}
+
+.rev-verified-pill.green {
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.35);
+  color: #34D399;
+}
+
+.rev-playtime-logged {
+  font-size: 11.5px;
+  color: #71717A;
+}
+
+.rev-game-title-link {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-decoration: none;
+  transition: color 0.2s;
+  line-height: 1.25;
+}
+
+.rev-game-title-link:hover {
+  color: #F4BF4E;
+}
+
+.rev-game-subline {
+  font-size: 12px;
+  color: #A1A1AA;
+}
+
+/* Score Display */
+.rev-card-score-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(14, 14, 14, 0.6);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@media (min-width: 640px) {
+  .rev-card-score-box {
+    flex-direction: column;
+    align-items: flex-end;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+}
+
+.rev-score-numbers {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.rev-score-big {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  color: #F4BF4E;
+  line-height: 1;
+}
+
+.rev-score-denominator {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  color: #71717A;
+}
+
+.rev-score-tier-pill {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #F4BF4E;
+  color: #040404;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.rev-score-tier-pill.dim {
+  background: rgba(244, 191, 78, 0.15);
+  border: 1px solid rgba(244, 191, 78, 0.35);
+  color: #F4BF4E;
+}
+
+/* Card Body */
+.rev-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rev-author-date-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #71717A;
+}
+
+.rev-author-highlight {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.rev-headline-text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.rev-quote-text {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #D4D4D8;
+  margin: 0;
+}
+
+/* Card Footer */
+.rev-card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rev-helpful-stats-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #A1A1AA;
+}
+
+.rev-card-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rev-action-btn-sm {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #D4D4D8;
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.rev-action-btn-sm:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(244, 191, 78, 0.4);
+  color: #F4BF4E;
+}
+
+.rev-action-btn-sm.active {
+  background: rgba(244, 191, 78, 0.15);
+  border-color: #F4BF4E;
+  color: #F4BF4E;
+  font-weight: 600;
+}
+
+.rev-delete-btn-sm {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: none;
+  border: none;
+  color: #71717A;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rev-delete-btn-sm:hover {
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* ========================================================================= */
+/* 5. Right Column: Form, Unreviewed List, Histogram                        */
+/* ========================================================================= */
+
+.rev-sidebar-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Submit Form Card */
+.rev-form-card {
+  padding: 22px;
+  position: relative;
+}
+
+.rev-specular-top-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #F4BF4E, transparent);
+  opacity: 0.75;
+}
+
+.rev-form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 16px;
+}
+
+.rev-form-title {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+.rev-form-subtitle {
+  font-size: 11.5px;
+  color: #A1A1AA;
+  margin: 2px 0 0 0;
+}
+
+.rev-critique-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rev-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rev-form-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #A1A1AA;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rev-input-field,
+.rev-select-field,
+.rev-textarea-field {
+  width: 100%;
+  background: rgba(14, 14, 14, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 13px;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.rev-input-field:focus,
+.rev-select-field:focus,
+.rev-textarea-field:focus {
+  border-color: #F4BF4E;
+  box-shadow: 0 0 10px rgba(244, 191, 78, 0.25);
+}
+
+/* 10-Point Segmented Rating Bar */
+.rev-rating-segmented-bar {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
+  padding: 4px;
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.rev-rating-segment-btn {
+  height: 32px;
+  border-radius: 4px;
+  background: none;
+  border: none;
+  color: #71717A;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rev-rating-segment-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+}
+
+.rev-rating-segment-btn.selected {
+  background: #F4BF4E;
+  color: #040404;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(244, 191, 78, 0.45);
+}
+
+.rev-form-checkbox-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.rev-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #D4D4D8;
+  cursor: pointer;
+}
+
+.rev-checkbox-input {
+  accent-color: #F4BF4E;
+  width: 15px;
+  height: 15px;
+}
+
+/* Form Buttons */
+.rev-form-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+.rev-submit-btn {
+  flex: 1;
+  height: 42px;
+  border-radius: 8px;
+  background: #F4BF4E;
+  border: none;
+  color: #040404;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 0 20px rgba(244, 191, 78, 0.3);
+  transition: all 0.2s ease;
+}
+
+.rev-submit-btn:hover {
+  background: #E5B03F;
+}
+
+.rev-cancel-draft-btn {
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #D4D4D8;
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rev-cancel-draft-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.rev-ownership-security-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #71717A;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rev-ownership-security-note svg {
+  color: #34D399;
+}
+
+/* Unreviewed Vault Titles Card */
+.rev-unreviewed-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rev-unreviewed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rev-unreviewed-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rev-unreviewed-title {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.rev-unreviewed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rev-unreviewed-item {
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(14, 14, 14, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.rev-unreviewed-item:hover {
+  border-color: rgba(244, 191, 78, 0.35);
+}
+
+.rev-unreviewed-game-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.rev-unreviewed-thumb {
+  width: 40px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.rev-unreviewed-text {
+  min-width: 0;
+}
+
+.rev-unreviewed-game-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rev-unreviewed-hours {
+  font-size: 11px;
+  color: #71717A;
+  margin: 2px 0 0 0;
+}
+
+.rev-write-review-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(244, 191, 78, 0.15);
+  border: 1px solid rgba(244, 191, 78, 0.35);
+  color: #F4BF4E;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.rev-write-review-btn:hover {
+  background: #F4BF4E;
+  color: #040404;
+}
+
+/* Rating Distribution Card */
+.rev-histogram-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rev-histogram-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rev-histogram-title {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.rev-histogram-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rev-histogram-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.rev-hist-score-label {
+  width: 22px;
+  text-align: right;
+  font-family: var(--font-heading);
+  color: #F4BF4E;
+}
+
+.rev-hist-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.rev-hist-bar-fill {
+  height: 100%;
+  background: #F4BF4E;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.rev-hist-count {
+  width: 24px;
+  text-align: right;
+  color: #71717A;
+  font-size: 11px;
+}
+
+/* ========================================================================= */
+/* Toast Notification Banner                                                 */
+/* ========================================================================= */
+
+.rev-toast-banner {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: #111113;
+  border: 1px solid rgba(244, 191, 78, 0.5);
+  border-radius: 10px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 2000;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 20px rgba(244, 191, 78, 0.25);
+  animation: revToastSlide 0.25s ease-out;
+}
+
+@keyframes revToastSlide {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rev-toast-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.rev-toast-msg {
+  font-size: 12px;
+  color: #A1A1AA;
+  margin-top: 2px;
+}
+
+/* Empty State */
+.rev-empty-feed {
+  padding: 48px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.rev-empty-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: rgba(244, 191, 78, 0.1);
+  border: 1px solid rgba(244, 191, 78, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #F4BF4E;
+}
+
+.rev-empty-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.rev-empty-desc {
+  font-size: 13px;
+  color: #71717A;
+  max-width: 400px;
+  margin: 0;
+}
