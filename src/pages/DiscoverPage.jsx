@@ -925,6 +925,16 @@ export default function DiscoverPage() {
             >
               Close
             </button>
+            <Link
+              to={`/games/${selectedGameForModal?.id}`}
+              className="btn-secondary"
+              style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              onClick={() => setIsDetailsModalOpen(false)}
+              title="View complete Game Details page"
+            >
+              <ExternalLink size={14} />
+              <span>Full Dossier</span>
+            </Link>
             {!selectedGameForModal?.isInLibrary ? (
               <button
                 type="button"
@@ -942,7 +952,7 @@ export default function DiscoverPage() {
                 style={{ textDecoration: 'none' }}
                 onClick={() => setIsDetailsModalOpen(false)}
               >
-                <ExternalLink size={15} />
+                <CheckCircle2 size={15} />
                 <span>Open in Library</span>
               </Link>
             )}
