@@ -1,0 +1,1401 @@
+/* ==========================================================================
+   FRIENDS PAGE STYLES (Stitch Liquid Glass & Dashboard Integration)
+   Colors: Background #040404, Accent #F4BF4E, Headings: Anton, Body: Lexend
+   ========================================================================== */
+
+.friends-page {
+  padding: 24px 32px;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   SHARED TOAST NOTIFICATION
+   -------------------------------------------------------------------------- */
+.friends-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: rgba(20, 20, 24, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--accent-primary);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(244, 191, 78, 0.4);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 1000;
+  animation: slideUpFriendsToast 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpFriendsToast {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   1. BREADCRUMB & HEADER SECTION
+   -------------------------------------------------------------------------- */
+.friends-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 16px;
+}
+
+.friends-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.friends-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.friends-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-primary);
+  animation: pulseGoldDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseGoldDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.friends-title {
+  font-family: var(--font-heading);
+  font-size: 38px;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.friends-description {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 650px;
+  line-height: 1.5;
+}
+
+.friends-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Tabs: Active / All / Pending */
+.friends-tabs-cluster {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(14, 15, 18, 0.8);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+}
+
+.friends-tab-btn {
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.friends-tab-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.friends-tab-btn.active {
+  background: var(--accent-dim);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.friends-tab-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+}
+
+.friends-add-peer-btn {
+  height: 36px;
+  padding: 0 16px;
+  background: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+  box-shadow: 0 0 16px rgba(244, 191, 78, 0.25);
+  border-radius: var(--radius-sm);
+  color: #040404;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.friends-add-peer-btn:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 0 22px rgba(244, 191, 78, 0.4);
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   2. KPI SUMMARY 4-CARD STRIP
+   -------------------------------------------------------------------------- */
+.friends-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .friends-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .friends-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.friends-kpi-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-specular), var(--glass-shadow-sm);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all var(--transition-normal);
+}
+
+.friends-kpi-card:hover {
+  border-color: rgba(244, 191, 78, 0.4);
+  transform: translateY(-2px);
+  box-shadow: var(--glass-specular-gold), var(--glass-shadow);
+}
+
+.friends-kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.friends-kpi-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.friends-kpi-icon {
+  color: var(--accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.friends-kpi-value {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  letter-spacing: 0.03em;
+  color: #FFFFFF;
+  line-height: 1;
+}
+
+.friends-kpi-value.gold {
+  color: var(--accent-primary);
+}
+
+.friends-kpi-sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.friends-kpi-sub.green {
+  color: var(--status-completed);
+}
+
+.friends-status-dot-active {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--status-completed);
+  box-shadow: 0 0 6px var(--status-completed);
+}
+
+/* --------------------------------------------------------------------------
+   3. MAIN SPLIT GRID (SECTION A: 5 cols | SECTION B: 7 cols)
+   -------------------------------------------------------------------------- */
+.friends-split-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (min-width: 1200px) {
+  .friends-split-grid {
+    grid-template-columns: 5fr 7fr;
+  }
+}
+
+/* =========================================================================
+   SECTION A: LEFT COLUMN - FRIENDS LIST & SELECTOR
+   ========================================================================= */
+.friends-list-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Filter Card inside Friends List */
+.friends-filter-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-specular), var(--glass-shadow-sm);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.friends-search-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.friends-search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.friends-search-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px 0 34px;
+  background: rgba(14, 15, 18, 0.75);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.friends-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.friends-search-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(244, 191, 78, 0.25);
+}
+
+.friends-sort-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-body);
+  font-size: 11px;
+}
+
+.friends-sort-label {
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.friends-sort-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.friends-sort-pill {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.friends-sort-pill:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.friends-sort-pill.active {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+/* Friend Item Cards List */
+.friends-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.friend-item-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-specular), var(--glass-shadow-sm);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.friend-item-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(24, 25, 30, 0.6);
+  transform: translateY(-1px);
+}
+
+/* SELECTED FRIEND CARD (Gold Rim & Active Left Bar) */
+.friend-item-card.selected {
+  background: rgba(20, 20, 24, 0.9);
+  border-color: var(--accent-primary);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(244, 191, 78, 0.4);
+}
+
+.friend-item-active-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent-primary);
+  box-shadow: 0 0 10px var(--accent-primary);
+}
+
+.friend-item-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.friend-item-user-cluster {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.friend-item-avatar-wrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.friend-item-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--glass-border);
+}
+
+.friend-item-status-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #040404;
+}
+
+.friend-item-status-dot.playing {
+  background: var(--status-playing);
+  box-shadow: 0 0 8px var(--status-playing);
+}
+
+.friend-item-status-dot.online {
+  background: var(--status-completed);
+  box-shadow: 0 0 8px var(--status-completed);
+}
+
+.friend-item-status-dot.offline {
+  background: var(--text-muted);
+}
+
+.friend-item-names {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.friend-item-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.friend-item-name {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.friend-item-card.selected .friend-item-name {
+  color: var(--accent-primary);
+}
+
+.friend-item-level {
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(244, 191, 78, 0.15);
+  color: var(--accent-primary);
+  border: 1px solid rgba(244, 191, 78, 0.3);
+}
+
+.friend-item-meta-sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Status & Inspection Tag */
+.friend-item-inspect-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.friend-item-badge-online {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--status-completed);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.friend-item-badge-offline {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* In-Session Strip inside Card */
+.friend-item-telemetry-strip {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.friend-item-game-active {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--status-playing);
+}
+
+.friend-item-game-active-icon {
+  animation: pulseGoldDot 2s infinite ease-in-out;
+}
+
+.friend-item-sub-timestamps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Pending Request Accordion Tile (Section C) */
+.friends-pending-tile {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-specular), var(--glass-shadow-sm);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.friends-pending-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.friends-pending-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.friends-pending-title {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.friends-pending-sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.friends-pending-badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--accent-dim);
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-border);
+}
+
+.friends-pending-item {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.friends-pending-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.friends-pending-avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.friends-pending-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.friends-accept-btn {
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+  color: #040404;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.friends-accept-btn:hover {
+  background: var(--accent-hover);
+}
+
+.friends-decline-btn {
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.friends-decline-btn:hover {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: var(--color-danger);
+  background: var(--color-danger-dim);
+}
+
+/* =========================================================================
+   SECTION B: RIGHT COLUMN - SELECTED FRIEND DOSSIER & HEAD-TO-HEAD
+   ========================================================================= */
+.friends-dossier-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Selected Friend Header Card */
+.friend-dossier-hero {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-specular), var(--glass-shadow);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.friend-dossier-ambient {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 240px;
+  height: 240px;
+  background: rgba(244, 191, 78, 0.06);
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.friend-dossier-top {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .friend-dossier-top {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.friend-dossier-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.friend-dossier-avatar-wrap {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  padding: 3px;
+  background: rgba(14, 15, 18, 0.8);
+  border: 1px solid var(--accent-border);
+  box-shadow: 0 0 16px rgba(244, 191, 78, 0.2);
+  flex-shrink: 0;
+}
+
+.friend-dossier-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  object-fit: cover;
+}
+
+.friend-dossier-lvl-badge {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 700;
+  background: #040404;
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+}
+
+.friend-dossier-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.friend-dossier-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.friend-dossier-username {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  letter-spacing: 0.03em;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.friend-dossier-status-pill {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.friend-dossier-status-pill.playing {
+  background: var(--accent-dim);
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-border);
+}
+
+.friend-dossier-status-pill.online {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--status-completed);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.friend-dossier-status-pill.offline {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  border: 1px solid var(--glass-border);
+}
+
+.friend-dossier-friendship-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.friend-dossier-badges-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+  padding-top: 2px;
+}
+
+.friend-dossier-badges-row .gold {
+  color: var(--accent-primary);
+}
+
+.friend-dossier-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+/* Current Active Title Banner inside Dossier */
+.friend-dossier-active-title-box {
+  background: rgba(10, 11, 14, 0.7);
+  border: 1px solid rgba(244, 191, 78, 0.3);
+  box-shadow: inset 0 1px 0 rgba(244, 191, 78, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+.friend-dossier-active-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.friend-dossier-active-icon {
+  color: var(--accent-primary);
+}
+
+.friend-dossier-active-title-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-primary);
+}
+
+.friend-dossier-active-game-name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.friend-dossier-active-hours {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--accent-primary);
+  text-align: right;
+  line-height: 1;
+}
+
+.friend-dossier-active-hours-sub {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: 2px;
+}
+
+/* HEAD-TO-HEAD COMPARISON MATRIX */
+.friend-matrix-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-specular), var(--glass-shadow-sm);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.friend-matrix-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 12px;
+}
+
+.friend-matrix-title-cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.friend-matrix-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.friend-matrix-subtag {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+/* Macro Metric Comparison 3-Grid */
+.friend-matrix-macro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  text-align: center;
+}
+
+.friend-macro-item {
+  background: rgba(14, 15, 18, 0.6);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.friend-macro-item.highlight {
+  border-color: rgba(244, 191, 78, 0.3);
+}
+
+.friend-macro-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.friend-macro-label.gold {
+  color: var(--accent-primary);
+}
+
+.friend-macro-values {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+}
+
+.friend-macro-num {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: #FFFFFF;
+}
+
+.friend-macro-num.gold {
+  color: var(--accent-primary);
+}
+
+.friend-macro-sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Playtime Comparative Bars */
+.friend-mutual-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.friend-mutual-sec-title {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.friend-mutual-card {
+  background: rgba(12, 13, 16, 0.7);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.friend-mutual-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.friend-mutual-game-title {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.friend-mutual-hours-tag {
+  font-family: monospace;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.friend-mutual-hours-tag .you {
+  color: var(--text-secondary);
+}
+
+.friend-mutual-hours-tag .friend {
+  color: var(--accent-primary);
+}
+
+/* Dual Comparative Progress Gauge */
+.friend-dual-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-full);
+  display: flex;
+  overflow: hidden;
+}
+
+.friend-dual-bar-you {
+  background: var(--text-secondary);
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+.friend-dual-bar-friend {
+  background: var(--accent-primary);
+  height: 100%;
+  box-shadow: 0 0 8px rgba(244, 191, 78, 0.5);
+  transition: width 0.5s ease;
+}
+
+.friend-mutual-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.friend-mutual-lead {
+  font-weight: 500;
+}
+
+.friend-mutual-lead.you {
+  color: var(--status-completed);
+}
+
+.friend-mutual-lead.friend {
+  color: var(--accent-primary);
+}
+
+/* RECENT FRIEND ACTIVITY STREAM */
+.friend-activity-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-specular), var(--glass-shadow-sm);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.friend-activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 12px;
+}
+
+.friend-activity-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.friend-activity-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.friend-activity-item {
+  background: rgba(14, 15, 18, 0.6);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all var(--transition-fast);
+}
+
+.friend-activity-item:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(20, 21, 26, 0.75);
+}
+
+.friend-activity-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.friend-activity-icon-box.mastery {
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  color: var(--accent-primary);
+}
+
+.friend-activity-icon-box.review {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: #FFFFFF;
+}
+
+.friend-activity-icon-box.backlog {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+}
+
+.friend-activity-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.friend-activity-top-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.friend-activity-badge {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent-primary);
+}
+
+.friend-activity-badge.review {
+  color: var(--text-muted);
+}
+
+.friend-activity-score {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--status-completed);
+  margin-left: 6px;
+}
+
+.friend-activity-time {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.friend-activity-headline {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.friend-activity-desc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.friend-activity-quote {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-secondary);
+  background: rgba(8, 9, 11, 0.6);
+  border: 1px solid var(--glass-border);
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin: 2px 0 0 0;
+}
+
+/* --------------------------------------------------------------------------
+   4. MODAL FORMS & DIALOGS
+   -------------------------------------------------------------------------- */
+.friends-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.friends-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.friends-form-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.friends-form-input {
+  height: 40px;
+  padding: 0 12px;
+  background: rgba(14, 15, 18, 0.85);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+}
+
+.friends-form-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(244, 191, 78, 0.25);
+}
+
+.friends-form-hint {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Full Mutual Titles Table in Modal */
+.friends-mutual-table-wrap {
+  max-height: 380px;
+  overflow-y: auto;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+}
+
+.friends-mutual-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 12px;
+  text-align: left;
+}
+
+.friends-mutual-table th {
+  padding: 10px 14px;
+  background: rgba(18, 19, 24, 0.9);
+  color: var(--text-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.friends-mutual-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+}
+
+.friends-mutual-table tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+  color: #FFFFFF;
+}
