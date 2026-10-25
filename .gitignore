@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+/node_modules/
+
+# Production build outputs
+dist/
+/dist/
+/dist-ssr/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Editor & OS files
+.DS_Store
+Thumbs.db
+*.sw?
+.vscode/
+.idea/
+
+# Project-specific non-negotiable exclusions
+/requirements/
+/workplace_references/

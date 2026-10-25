@@ -1,0 +1,52 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: transparent;
+  position: relative;
+}
+
+/* Ambient Gold Lighting Vignettes matching Stitch Screen 4 & My Library */
+.ambient-vignette-top {
+  position: fixed;
+  top: -100px;
+  left: 320px;
+  width: 500px;
+  height: 300px;
+  background-color: rgba(244, 191, 78, 0.04);
+  filter: blur(150px);
+  -webkit-filter: blur(150px);
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-vignette-bottom {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 450px;
+  height: 450px;
+  background-color: rgba(244, 191, 78, 0.03);
+  filter: blur(160px);
+  -webkit-filter: blur(160px);
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.main-content-wrapper {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.page-content-area {
+  flex: 1;
+  background-color: transparent;
+  position: relative;
+}

@@ -1,0 +1,81 @@
+:root {
+  /* Exact Brand Colors (Non-negotiable) */
+  --bg-main: #040404;
+  --accent-primary: #F4BF4E;
+  --accent-gold: #F4BF4E;
+
+  /* Accent Color Variants (Warm Gold / Amber) */
+  --accent-hover: #f7ce74;
+  --accent-active: #e2ad38;
+  --accent-dim: rgba(244, 191, 78, 0.14);
+  --accent-subtle: rgba(244, 191, 78, 0.06);
+  --accent-border: rgba(244, 191, 78, 0.40);
+  --accent-glow: rgba(244, 191, 78, 0.22);
+
+  /* Apple-Inspired Glass Surfaces (Translucent Liquid Glass) */
+  --glass-bg: rgba(18, 20, 26, 0.42);
+  --glass-bg-hover: rgba(28, 30, 40, 0.55);
+  --glass-bg-active: rgba(35, 38, 50, 0.65);
+  --glass-bg-elevated: rgba(26, 28, 36, 0.45);
+  --glass-sidebar: rgba(10, 11, 14, 0.55);
+  --glass-topbar: rgba(10, 11, 14, 0.50);
+
+  /* Fallback surfaces when backdrop-filter is unsupported */
+  --bg-sidebar: #09090b;
+  --bg-topbar: rgba(9, 9, 11, 0.94);
+  --bg-surface: #0f1013;
+  --bg-surface-hover: #16181d;
+  --bg-surface-active: #1d1f25;
+  --bg-surface-elevated: #181920;
+
+  /* Reflective Edges & Borders (Light catching upper edge) */
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-top: rgba(255, 255, 255, 0.20);
+  --glass-border-bottom: rgba(255, 255, 255, 0.04);
+  --glass-border-subtle: rgba(255, 255, 255, 0.06);
+  --glass-border-hover: rgba(255, 255, 255, 0.20);
+  --glass-border-gold: rgba(244, 191, 78, 0.45);
+  --glass-border-gold-top: rgba(244, 191, 78, 0.65);
+
+  /* Glass Inner Reflections and Ambient Depth */
+  --glass-specular: inset 0 1px 1px 0 rgba(255, 255, 255, 0.16), inset 0 0 16px 0 rgba(255, 255, 255, 0.015);
+  --glass-specular-gold: inset 0 1px 1px 0 rgba(244, 191, 78, 0.35), inset 0 0 16px 0 rgba(244, 191, 78, 0.03);
+  --glass-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.55), 0 4px 12px -2px rgba(0, 0, 0, 0.35);
+  --glass-shadow-sm: 0 8px 24px -2px rgba(0, 0, 0, 0.45);
+  --glass-blur: blur(14px) saturate(140%);
+  --glass-blur-sm: blur(10px) saturate(130%);
+
+  /* Typography Colors */
+  --text-primary: #f5f5f7;       /* Crisp off-white */
+  --text-secondary: #a1a6b2;     /* Muted soft grey */
+  --text-muted: #656b78;         /* Restrained grey for captions / meta */
+  --text-inverse: #040404;       /* High-contrast text on gold accent */
+
+  /* Status Colors */
+  --status-backlog: #7a818e;
+  --status-playing: #F4BF4E;
+  --status-completed: #10b981;
+  --color-danger: #ef4444;
+  --color-danger-dim: rgba(239, 68, 68, 0.14);
+
+  /* Standard Borders */
+  --border-subtle: var(--glass-border);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --border-active: var(--glass-border-gold);
+
+  /* Typography - Mandatory Anton for Headings, Lexend for Body */
+  --font-heading: 'Anton', system-ui, -apple-system, sans-serif;
+  --font-body: 'Lexend', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Layout and Geometry */
+  --sidebar-width: 280px;
+  --topbar-height: 72px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
