@@ -22,3 +22,10 @@ Thumbs.db
 # Project-specific non-negotiable exclusions
 /requirements/
 /workplace_references/
+
+# Java backend build outputs & logs
+backend/target/
+target/
+*.log
+logs/
+*.class
