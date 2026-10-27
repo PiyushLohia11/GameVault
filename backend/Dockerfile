@@ -1,3 +1,4 @@
+
 FROM maven:3.9-eclipse-temurin-17 AS build
 
 WORKDIR /app
@@ -15,4 +16,4 @@ COPY --from=build /app/target/gamevault-backend-all.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-cp", "app.jar", "com.gamevault.GameVaultServer"]
