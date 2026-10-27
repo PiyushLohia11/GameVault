@@ -1,6 +1,6 @@
 import { mockGames } from '../mockData/games';
 import { mockUserLibrary } from '../mockData/userLibrary';
-import { simulateDelay } from './apiConfig';
+import { simulateDelay, USE_MOCK, API_BASE_URL } from './apiConfig';
 
 /**
  * Initial Relational Reviews Database State
@@ -224,6 +224,51 @@ export const reviewsService = {
       mockUserLibrary.filter((e) => e.userId === userId).map((e) => e.gameId)
     );
 
+    // Sync live reviews from Java Backend if active
+    if (!USE_MOCK) {
+      try {
+        const url = (gameId && gameId !== 'all') 
+          ? `${API_BASE_URL}/reviews?gameId=${gameId}` 
+          : `${API_BASE_URL}/reviews`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const backendReviews = await res.json();
+          if (Array.isArray(backendReviews)) {
+            backendReviews.forEach((br) => {
+              const alreadyExists = reviewsState.some(
+                (r) => r.gameId === br.gameId && r.userId === br.userId
+              );
+              if (!alreadyExists) {
+                reviewsState.push({
+                  id: reviewsState.length + 100,
+                  gameId: br.gameId,
+                  userId: br.userId,
+                  authorName: br.username || 'Arjun',
+                  authorAvatar: null,
+                  authorBadge: 'JAVA JDBC VERIFIED',
+                  isUserReview: br.userId === userId,
+                  hoursLogged: 45.0,
+                  rating: br.rating,
+                  ratingLabel: br.rating === 10 ? 'MASTERPIECE' : br.rating >= 9 ? 'EXCEPTIONAL' : 'GREAT',
+                  headline: br.gameTitle ? `Review for ${br.gameTitle}` : 'Verified Critique',
+                  quote: br.reviewText || '',
+                  recommend: br.rating >= 7,
+                  spoilers: false,
+                  postedDate: br.reviewDate || 'Oct 26, 2026',
+                  editedDate: null,
+                  helpfulCount: 15,
+                  commentsCount: 3,
+                  isHelpfulMarked: false,
+                });
+              }
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('[reviewsService] Java Backend reviews sync fallback:', err.message);
+      }
+    }
+
     // Relational join with mockGames
     let joined = reviewsState.map((rev) => {
       const game = mockGames.find((g) => g.id === rev.gameId) || {};
@@ -400,6 +445,24 @@ export const reviewsService = {
 
     const ratingLabel = numericRating === 10 ? 'MASTERPIECE' : numericRating >= 9 ? 'EXCEPTIONAL' : numericRating >= 8 ? 'GREAT' : numericRating >= 7 ? 'GOOD' : 'MIXED';
     const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+    // Send to Java Backend if active
+    if (!USE_MOCK) {
+      try {
+        await fetch(`${API_BASE_URL}/reviews`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId,
+            gameId: numGameId,
+            rating: Math.round(numericRating),
+            reviewText: quote || headline || '',
+          }),
+        });
+      } catch (err) {
+        console.warn('[reviewsService] Java Backend review submit fallback:', err.message);
+      }
+    }
 
     // Check if review already exists
     const existingIndex = reviewsState.findIndex(

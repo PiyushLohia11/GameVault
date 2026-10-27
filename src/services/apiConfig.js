@@ -1,10 +1,11 @@
 /**
  * Central API Configuration
  * 
- * When our teammate's Java backend HTTP endpoints are available,
- * we can switch USE_MOCK to false and point API_BASE_URL to the server.
+ * Connected to Member 3's Java Backend & JDBC Server (Port 8080).
+ * When USE_MOCK is false, services fetch live data from the Java REST API.
+ * If the Java server is offline, services gracefully fallback to mock data.
  */
-export const USE_MOCK = true;
+export const USE_MOCK = false;
 export const API_BASE_URL = 'http://localhost:8080/api';
 
 /**

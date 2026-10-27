@@ -3,7 +3,7 @@ import { mockGames } from '../mockData/games';
 import { mockUserLibrary } from '../mockData/userLibrary';
 import { mockAchievements } from '../mockData/achievements';
 import { mockRecentActivity } from '../mockData/activity';
-import { simulateDelay } from './apiConfig';
+import { simulateDelay, USE_MOCK, API_BASE_URL } from './apiConfig';
 
 /**
  * Service providing aggregated queries for the Dashboard.
@@ -42,15 +42,30 @@ export const dashboardService = {
       };
     }
 
+    // Fetch live dashboard KPIs from Java Backend if active
+    let backendSummary = null;
+    if (!USE_MOCK) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/dashboard?userId=${userId}`);
+        if (res.ok) {
+          backendSummary = await res.json();
+        }
+      } catch (err) {
+        console.warn('[dashboardService] Java Backend dashboard fetch fallback:', err.message);
+      }
+    }
+
     // 1. Filter library by active user
     const userLibrary = mockUserLibrary.filter((entry) => entry.userId === userId);
 
     // 2. Compute summary counts directly from library records
-    const ownedCount = userLibrary.length;
+    const ownedCount = backendSummary?.vaultTotal !== undefined ? backendSummary.vaultTotal : userLibrary.length;
     const completedCount = userLibrary.filter((e) => e.status === 'Completed').length;
     const playingCount = userLibrary.filter((e) => e.status === 'Playing').length;
     const backlogCount = userLibrary.filter((e) => e.status === 'Backlog').length;
-    const totalPlaytimeHours = userLibrary.reduce((sum, e) => sum + (e.playtimeHours || 0), 0);
+    const totalPlaytimeHours = backendSummary?.totalPlaytimeHours !== undefined
+      ? backendSummary.totalPlaytimeHours
+      : userLibrary.reduce((sum, e) => sum + (e.playtimeHours || 0), 0);
 
     // 3. Continue Playing area: join userLibrary records with mockGames
     const continuePlaying = userLibrary
@@ -123,12 +138,13 @@ export const dashboardService = {
     const unlockedAchievements = mockAchievements.filter((a) => a.isUnlocked);
     const pointsEarned = unlockedAchievements.reduce((sum, a) => sum + a.points, 0);
     const totalPoints = mockAchievements.reduce((sum, a) => sum + a.points, 0);
+    const finalPoints = backendSummary?.achievementPoints !== undefined ? backendSummary.achievementPoints : pointsEarned;
     const achievementStats = {
       totalUnlocked: unlockedAchievements.length,
       totalAvailable: mockAchievements.length,
-      pointsEarned,
+      pointsEarned: finalPoints,
       totalPoints,
-      percentage: totalPoints > 0 ? Math.round((pointsEarned / totalPoints) * 100) : 0,
+      percentage: totalPoints > 0 ? Math.round((finalPoints / totalPoints) * 100) : 0,
       featured: unlockedAchievements[0] || null,
     };
 

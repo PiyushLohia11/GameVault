@@ -6,7 +6,7 @@ import {
 } from '../mockData/friends';
 import { mockUserLibrary } from '../mockData/userLibrary';
 import { mockGames } from '../mockData/games';
-import { simulateDelay } from './apiConfig';
+import { simulateDelay, USE_MOCK, API_BASE_URL } from './apiConfig';
 
 // In-memory state for the active session
 let friendshipsState = [...mockFriendships];
@@ -33,6 +33,43 @@ export const friendsService = {
       search = '',
       sortBy = 'online_first', // 'online_first', 'playtime', 'mutuals', 'alpha'
     } = filters;
+
+    // 1. Sync friends from Java Backend if active
+    if (!USE_MOCK) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/friends?userId=${userId}`);
+        if (res.ok) {
+          const backendFriends = await res.json();
+          if (Array.isArray(backendFriends)) {
+            backendFriends.forEach((bf) => {
+              const exists = friendUsersState.some((u) => u.username === bf.username);
+              if (!exists) {
+                friendUsersState.push({
+                  id: bf.userId,
+                  username: bf.username,
+                  tag: 'Ally',
+                  email: bf.email,
+                  avatar: null,
+                  badge: 'ORACLE VERIFIED',
+                  status: 'online',
+                  statusMessage: 'Connected via Java Backend',
+                  lastActive: 'Just now',
+                });
+                friendshipsState.push({
+                  id: friendshipsState.length + 100,
+                  userId,
+                  friendId: bf.userId,
+                  status: 'accepted',
+                  establishedDate: '2026-10-24',
+                });
+              }
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('[friendsService] Java Backend friends sync fallback:', err.message);
+      }
+    }
 
     // 1. Get user's library game IDs
     const userGameIds = new Set(
