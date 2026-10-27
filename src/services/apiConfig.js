@@ -6,7 +6,7 @@
  * If the Java server is offline, services gracefully fallback to mock data.
  */
 export const USE_MOCK = false;
-export const API_BASE_URL = 'http://localhost:8080/api';
+export const API_BASE_URL = 'https://gamevault-vkx1.onrender.com/api';
 
 /**
  * Helper to simulate network latency for realistic async UI behavior
