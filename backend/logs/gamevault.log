@@ -1,0 +1,7 @@
+2026-10-26 19:26:40.919 [main] INFO  com.gamevault.config.DBConnection - HikariCP pool 'GameVaultPool' initialized. URL: jdbc:h2:mem:gamevault;MODE=Oracle;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:schema.sql'
+2026-10-26 19:26:41.295 [main] INFO  com.gamevault.config.DBConnection - HikariCP pool shut down.
+2026-10-26 19:26:58.732 [main] INFO  com.gamevault.config.DBConnection - HikariCP pool 'GameVaultPool' initialized. URL: jdbc:h2:mem:gamevault;MODE=Oracle;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:schema.sql'
+2026-10-26 19:26:59.110 [main] INFO  com.gamevault.config.DBConnection - HikariCP pool shut down.
+2026-10-26 19:29:46.871 [pool-1-thread-4] INFO  com.gamevault.config.DBConnection - HikariCP pool 'GameVaultPool' initialized. URL: jdbc:h2:mem:gamevault;MODE=Oracle;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:schema.sql'
+2026-10-26 19:31:46.167 [pool-1-thread-9] INFO  com.gamevault.dao.ReviewDAO - Inserted review: userId=1, gameId=2, rating=7
+2026-10-26 19:31:46.168 [pool-1-thread-9] INFO  com.gamevault.service.ReviewService - Review submitted: userId=1, gameId=2, rating=7, newAvg=7.0

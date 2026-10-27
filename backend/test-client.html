@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GameVault — Backend Live Test Console</title>
+  <style>
+    :root {
+      --bg: #040404;
+      --card-bg: #0d0d0d;
+      --accent: #F4BF4E;
+      --accent-dim: rgba(244, 191, 78, 0.15);
+      --text: #e0e0e0;
+      --text-muted: #888888;
+      --border: #222222;
+      --success: #34D399;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+    }
+    .header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    h1 {
+      color: var(--accent);
+      margin: 0 0 6px 0;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+    .subtitle { color: var(--text-muted); font-size: 13px; margin: 0; }
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 16px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    button {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 14px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 8px;
+      margin-right: 6px;
+      font-size: 12px;
+    }
+    button:hover { opacity: 0.85; }
+    pre {
+      background: #000;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 11px;
+      max-height: 180px;
+      overflow-y: auto;
+      color: #00ff88;
+    }
+    input, textarea, select {
+      width: 100%;
+      background: #000;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: #fff;
+      padding: 8px;
+      margin-bottom: 8px;
+      box-sizing: border-box;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1>GAMEVAULT — LIVE REST API TESTER</h1>
+      <p class="subtitle">Direct browser test client for the Java 8 Backend (Member 3)</p>
+    </div>
+    <div id="connectionStatus" class="status-badge">Checking Server...</div>
+  </div>
+
+  <div class="grid">
+    <!-- Card 1: Games Catalogue -->
+    <div class="card">
+      <h2>1. Game Catalogue (GET /api/games)</h2>
+      <p style="font-size:12px;color:var(--text-muted);">Fetch catalogue games matching Member 1 schema & React DiscoverPage.</p>
+      <button onclick="fetchGames()">Fetch All Games</button>
+      <button onclick="fetchGames('RPG')">Filter RPG</button>
+      <pre id="gamesOutput">// Click a button above to load games...</pre>
+    </div>
+
+    <!-- Card 2: User Library -->
+    <div class="card">
+      <h2>2. User Vault Library (GET /api/library)</h2>
+      <p style="font-size:12px;color:var(--text-muted);">Matches React MyLibraryPage (Status, Playtime, Platform).</p>
+      <button onclick="fetchLibrary(1)">Arjun's Library (User 1)</button>
+      <button onclick="fetchLibrary(2)">Priya's Library (User 2)</button>
+      <pre id="libraryOutput">// Click to load library...</pre>
+    </div>
+
+    <!-- Card 3: Reviews -->
+    <div class="card">
+      <h2>3. Reviews Archive (GET /api/reviews)</h2>
+      <p style="font-size:12px;color:var(--text-muted);">Matches React ReviewsPage (Game ID, Ratings, Critique text).</p>
+      <button onclick="fetchReviews(1)">Reviews for Game 1</button>
+      <pre id="reviewsOutput">// Click to load reviews...</pre>
+    </div>
+
+    <!-- Card 4: Submit Review -->
+    <div class="card">
+      <h2>4. Submit Critique (POST /api/reviews)</h2>
+      <p style="font-size:12px;color:var(--text-muted);">Validates 1-10 rating, user library ownership, and recalculates average.</p>
+      <label style="font-size:11px;color:var(--text-muted);">Game ID:</label>
+      <input type="number" id="reviewGameId" value="1">
+      <label style="font-size:11px;color:var(--text-muted);">Rating (1-10):</label>
+      <input type="number" id="reviewRating" min="1" max="10" value="10">
+      <label style="font-size:11px;color:var(--text-muted);">Critique:</label>
+      <textarea id="reviewText" rows="2">Absolutely breathtaking gameplay and narrative design.</textarea>
+      <button onclick="submitReview()">Submit Review</button>
+      <pre id="submitReviewOutput">// Submit result will appear here...</pre>
+    </div>
+
+    <!-- Card 5: Achievements -->
+    <div class="card">
+      <h2>5. Achievements (GET /api/achievements)</h2>
+      <p style="font-size:12px;color:var(--text-muted);">Matches React AchievementsPage.</p>
+      <button onclick="fetchAchievements(1)">Achievements for Game 1</button>
+      <button onclick="fetchAchievements(2)">Achievements for Game 2</button>
+      <pre id="achievementsOutput">// Achievements output...</pre>
+    </div>
+
+    <!-- Card 6: Telemetry & Dashboard -->
+    <div class="card">
+      <h2>6. Dashboard Telemetry (GET /api/dashboard)</h2>
+      <p style="font-size:12px;color:var(--text-muted);">Matches React DashboardPage KPIs (Vault Total, Playtime, Points).</p>
+      <button onclick="fetchDashboard(1)">Get Arjun's Dashboard KPIs</button>
+      <pre id="dashboardOutput">// Dashboard stats output...</pre>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8080/api';
+
+    async function checkHealth() {
+      const badge = document.getElementById('connectionStatus');
+      try {
+        const res = await fetch(`${API_BASE}/health`);
+        if (res.ok) {
+          badge.textContent = 'Server Connected (Port 8080)';
+          badge.style.borderColor = '#34D399';
+          badge.style.color = '#34D399';
+          badge.style.background = 'rgba(52, 211, 153, 0.15)';
+        }
+      } catch (e) {
+        badge.textContent = 'Server Offline (Start GameVaultServer.java)';
+        badge.style.borderColor = '#EF4444';
+        badge.style.color = '#EF4444';
+        badge.style.background = 'rgba(239, 68, 68, 0.15)';
+      }
+    }
+
+    async function fetchGames(genre) {
+      const url = genre ? `${API_BASE}/games?genre=${encodeURIComponent(genre)}` : `${API_BASE}/games`;
+      const res = await fetch(url);
+      const data = await res.json();
+      document.getElementById('gamesOutput').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function fetchLibrary(userId) {
+      const res = await fetch(`${API_BASE}/library?userId=${userId}`);
+      const data = await res.json();
+      document.getElementById('libraryOutput').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function fetchReviews(gameId) {
+      const res = await fetch(`${API_BASE}/reviews?gameId=${gameId}`);
+      const data = await res.json();
+      document.getElementById('reviewsOutput').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function submitReview() {
+      const payload = {
+        userId: 1,
+        gameId: parseInt(document.getElementById('reviewGameId').value),
+        rating: parseInt(document.getElementById('reviewRating').value),
+        reviewText: document.getElementById('reviewText').value
+      };
+      const res = await fetch(`${API_BASE}/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      document.getElementById('submitReviewOutput').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function fetchAchievements(gameId) {
+      const res = await fetch(`${API_BASE}/achievements?gameId=${gameId}`);
+      const data = await res.json();
+      document.getElementById('achievementsOutput').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function fetchDashboard(userId) {
+      const res = await fetch(`${API_BASE}/dashboard?userId=${userId}`);
+      const data = await res.json();
+      document.getElementById('dashboardOutput').textContent = JSON.stringify(data, null, 2);
+    }
+
+    // Initial check
+    checkHealth();
+    setInterval(checkHealth, 5000);
+  </script>
+</body>
+</html>
