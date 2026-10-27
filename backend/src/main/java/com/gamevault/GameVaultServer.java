@@ -21,7 +21,8 @@ import java.util.concurrent.Executors;
  */
 public class GameVaultServer {
 
-    private static final int PORT = 8080;
+    private static final int PORT =
+        Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
 
     private static final UserService userService = new UserService();
     private static final GameService gameService = new GameService();
