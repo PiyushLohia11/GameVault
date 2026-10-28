@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -12,10 +12,11 @@ import {
   Flame,
 } from 'lucide-react';
 import './Sidebar.css';
+import { libraryService } from '../../services/libraryService';
 
 const navItems = [
   { to: '/', label: 'Overview', icon: LayoutDashboard, exact: true },
-  { to: '/library', label: 'Library', icon: Gamepad2, badge: '142' },
+  { to: '/library', label: 'Library', icon: Gamepad2 },
   { to: '/discover', label: 'Discover', icon: Compass },
   { to: '/achievements', label: 'Mastery', icon: Trophy },
   { to: '/friends', label: 'Network', icon: Users, pillBadge: '3 ON' },
@@ -25,6 +26,32 @@ const navItems = [
 
 export default function Sidebar() {
   const navigate = useNavigate();
+  const [libraryEntries, setLibraryEntries] = useState(null);
+
+  const refreshLibraryCounts = useCallback(async () => {
+    try {
+      const entries = await libraryService.getUserLibrary(1);
+      setLibraryEntries(entries);
+    } catch (error) {
+      console.error('Unable to refresh sidebar library counts:', error);
+      setLibraryEntries(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshLibraryCounts();
+    window.addEventListener('gamevault:library-changed', refreshLibraryCounts);
+    window.addEventListener('focus', refreshLibraryCounts);
+    return () => {
+      window.removeEventListener('gamevault:library-changed', refreshLibraryCounts);
+      window.removeEventListener('focus', refreshLibraryCounts);
+    };
+  }, [refreshLibraryCounts]);
+
+  const vaultCount = libraryEntries?.length;
+  const masteredCount = libraryEntries?.filter(
+    (game) => game.status?.toLowerCase() === 'completed'
+  ).length;
 
   const handleAddTitleClick = () => {
     navigate('/library?add=true');
@@ -41,7 +68,7 @@ export default function Sidebar() {
           </div>
           <div className="brand-text-col">
             <div className="brand-title-row">
-              <span className="brand-title-text">VALENCE</span>
+              <span className="brand-title-text">GAME VAULT</span>
               <span className="brand-gold-dot" />
             </div>
             <span className="brand-protocol-sub">ARCHIVE PROTOCOL</span>
@@ -76,8 +103,8 @@ export default function Sidebar() {
                     <span className="nav-item-label">{item.label}</span>
 
                     {/* Numeric Count Badge (e.g. Library 142) */}
-                    {item.badge && (
-                      <span className="nav-mono-badge">{item.badge}</span>
+                    {item.to === '/library' && (
+                      <span className="nav-mono-badge">{vaultCount ?? '—'}</span>
                     )}
 
                     {/* Pill Status Badge (e.g. Network 3 ON) */}
@@ -98,11 +125,11 @@ export default function Sidebar() {
         <div className="sidebar-telemetry-grid">
           <div className="sidebar-metric-box">
             <span className="sidebar-metric-label">Vault Count</span>
-            <span className="sidebar-metric-value">142</span>
+            <span className="sidebar-metric-value">{vaultCount ?? '—'}</span>
           </div>
           <div className="sidebar-metric-box">
             <span className="sidebar-metric-label">Mastered</span>
-            <span className="sidebar-metric-value text-gold">38</span>
+            <span className="sidebar-metric-value text-gold">{masteredCount ?? '—'}</span>
           </div>
         </div>
 

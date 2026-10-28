@@ -899,7 +899,7 @@ export default function DiscoverPage() {
       <div className="protocol-telemetry-banner">
         <div className="protocol-lead-side">
           <Shield size={14} color="var(--accent-primary)" />
-          <span>VALENCE DECENTRALIZED PROTOCOL • REPOSITORY SHARD #03 • LATENCY 18ms</span>
+          <span>GAME VAULT • REPOSITORY SHARD #03 • LATENCY 18ms</span>
         </div>
         <div className="protocol-links-side">
           <span>API SPECS</span>

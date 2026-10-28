@@ -42,7 +42,7 @@ export const DEFAULT_SETTINGS = {
     manifestCount: 142,
     footprintSizeMB: 48.2,
     totalStorageMB: 1024,
-    clientVersion: 'VALENCE v2.4.9 (Build 8842)',
+    clientVersion: 'GAME VAULT v2.4.9 (Build 8842)',
     channel: 'STABLE',
     latencyMs: 14,
   },

@@ -273,12 +273,12 @@ export default function MyLibraryPage() {
     }
 
     try {
-      const updated = await libraryService.updateLibraryEntry(1, selectedRecord.id, {
+      const updated = await libraryService.updateLibraryEntry(1, selectedRecord, {
         platform: formData.platform,
         status: formData.status,
         playtimeHours: parseFloat(formData.playtimeHours) || 0,
       });
-      setLibrary((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
+      setLibrary((prev) => prev.map((item) => (item.id === selectedRecord.id ? updated : item)));
       setIsEditModalOpen(false);
       showToast(`Updated "${updated.title}" successfully.`);
     } catch (err) {
@@ -296,7 +296,7 @@ export default function MyLibraryPage() {
   // Delete Confirm execute
   const handleDeleteConfirm = async () => {
     try {
-      await libraryService.removeLibraryEntry(1, selectedRecord.id);
+      await libraryService.removeLibraryEntry(1, selectedRecord);
       setLibrary((prev) => prev.filter((item) => item.id !== selectedRecord.id));
       setIsDeleteConfirmOpen(false);
       showToast(`Removed "${selectedRecord.title}" from your library.`);

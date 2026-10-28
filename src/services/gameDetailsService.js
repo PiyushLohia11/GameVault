@@ -2,6 +2,8 @@ import { mockGames } from '../mockData/games';
 import { libraryService } from './libraryService';
 import { achievementService } from './achievementService';
 import { simulateDelay } from './apiConfig';
+import { USE_MOCK } from './apiConfig';
+import { apiRequest, apiJson } from './apiClient';
 
 /**
  * Mock Reviews database state
@@ -183,6 +185,23 @@ export const gameDetailsService = {
    * @param {number} userId 
    */
   async getGameDetails(gameId, userId = 1) {
+    if (!USE_MOCK) {
+      const id=Number(gameId);
+      const [games, library, achievements, allReviews] = await Promise.all([
+        apiRequest('/games'),apiRequest(`/users/${userId}/library`),apiRequest(`/users/${userId}/achievements?gameId=${id}`),apiRequest(`/reviews?voterId=${userId}`),
+      ]);
+      const game=games.find(g=>g.id===id); if(!game) return null;
+      const entry=library.find(e=>e.gameId===id);
+      const unlocked=achievements.filter(a=>a.isUnlocked), points=achievements.reduce((n,a)=>n+a.points,0);
+      const own=allReviews.find(r=>r.gameId===id&&r.userId===userId)||null;
+      const reviews=allReviews.filter(r=>r.gameId===id);
+      return { id,title:game.title,developer:game.developer,publisher:game.developer,director:'',franchise:'',releaseYear:game.releaseYear,
+        avgRating:game.avgRating||0,coverImage:game.coverImage||'/images/eldenring.jpg',heroBackdrop:game.coverImage||'/images/eldenring.jpg',description:'',
+        genres:game.genres||[],platforms:game.platforms||[],storageFootprint:'',refCode:`GAME-${id}`,criticConsensus:'',verifiedCritiquesCount:reviews.length,supportedFeatures:[],
+        enrollment:entry?{isInLibrary:true,libraryEntryId:entry.id,platform:entry.platform,status:entry.status,playtimeHours:entry.playtimeHours,lastPlayedDate:entry.lastPlayedDate,progressPercent:0,subGoal:'',vaultRank:'',tierLabel:'',percentile:''}:{isInLibrary:false,libraryEntryId:null,platform:game.platforms?.[0]||'PC',status:null,playtimeHours:0,lastPlayedDate:null,progressPercent:0,subGoal:'',vaultRank:'',tierLabel:'',percentile:''},
+        achievements:{totalCount:achievements.length,unlockedCount:unlocked.length,totalPoints:points,earnedPoints:unlocked.reduce((n,a)=>n+a.points,0),progressPercent:achievements.length?Math.round(unlocked.length/achievements.length*100):0,list:achievements,showcase:achievements.slice(0,5)},
+        reviews:{communityAvg:reviews.length?(reviews.reduce((n,r)=>n+r.rating,0)/reviews.length).toFixed(1):game.avgRating,totalCritiques:reviews.length,userReview:own,curatorReviews:reviews.filter(r=>r.userId!==userId)} };
+    }
     await simulateDelay(120);
 
     const numId = Number(gameId);
@@ -391,6 +410,9 @@ export const gameDetailsService = {
    * Save or update signed-in user's critique for this game
    */
   async saveUserReview(gameId, { rating, quote, hoursLogged }, userId = 1) {
+    if (!USE_MOCK) {
+      return apiRequest(`/users/${userId}/reviews`,apiJson('POST',{gameId:Number(gameId),rating:Math.round(Number(rating)),reviewText:quote||''}));
+    }
     await simulateDelay(120);
     const numId = Number(gameId);
     const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -432,6 +454,12 @@ export const gameDetailsService = {
    * Toggle helpful vote on a curator review
    */
   async toggleHelpfulReview(reviewId) {
+    if (!USE_MOCK) {
+      const reviews=await apiRequest('/reviews?voterId=1');
+      const review=reviews.find(r=>r.id===Number(reviewId));
+      if(!review) throw new Error('Review not found.');
+      return apiRequest(`/reviews/${review.userId}/${review.gameId}/helpful?voterId=1`,{method:'POST'});
+    }
     await simulateDelay(60);
     const review = mockReviewsState.find((r) => r.id === Number(reviewId));
     if (review) {

@@ -77,6 +77,29 @@ export const catalogueService = {
       libraryGameMap.get(gid).push(entry);
     });
 
+    // Pull the catalogue from Oracle through the Java API when integration is enabled.
+    let catalogueGames = mockGames;
+    if (!USE_MOCK) {
+      const response = await fetch(`${API_BASE_URL}/games`);
+      if (!response.ok) throw new Error(`Catalogue API returned HTTP ${response.status}`);
+      const apiGames = await response.json();
+      catalogueGames = apiGames.map((game) => {
+        const visual = mockGames.find((item) => item.title.toLowerCase() === game.title.toLowerCase());
+        return {
+          ...(visual || {}),
+          id: game.id,
+          title: game.title,
+          developer: game.developer,
+          publisher: game.developer,
+          releaseYear: game.releaseYear,
+          genres: game.genres || [],
+          platforms: game.platforms || [],
+          avgRating: game.avgRating || 0,
+          coverImage: visual?.coverImage || '/images/eldenring.jpg',
+        };
+      });
+    }
+
     // Annotate all catalogue games with library state
     let enrichedGames = baseGames.map((game) => {
       const userEntries = libraryGameMap.get(game.id) || [];
@@ -246,3 +269,14 @@ export const catalogueService = {
     });
   },
 };
+
+async function APIRequestGames() {
+  const response=await fetch(`${API_BASE_URL}/games`);
+  if(!response.ok) throw new Error(`Catalogue API returned HTTP ${response.status}`);
+  const apiGames=await response.json();
+  return apiGames.map(game=>{
+    const visual=mockGames.find(item=>item.title.toLowerCase()===game.title.toLowerCase());
+    return {...(visual||{}),id:game.id,title:game.title,developer:game.developer,publisher:game.developer,releaseYear:game.releaseYear,
+      genres:game.genres||[],platforms:game.platforms||[],avgRating:game.avgRating||0,coverImage:visual?.coverImage||'/images/eldenring.jpg'};
+  });
+}

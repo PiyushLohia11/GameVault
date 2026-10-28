@@ -5,6 +5,36 @@ import { simulateDelay, USE_MOCK, API_BASE_URL } from './apiConfig';
 // In-memory working copy for the session
 let userLibraryState = [...mockUserLibrary];
 
+function notifyLibraryChanged() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('gamevault:library-changed'));
+  }
+}
+
+function mapGame(record) {
+  const visual = mockGames.find((game) => game.title.toLowerCase() === record.title.toLowerCase());
+  return {
+    ...record,
+    coverImage: visual?.coverImage || '/images/eldenring.jpg',
+    availablePlatforms: record.platforms || record.availablePlatforms || [record.platform],
+    tag: visual?.tag || null,
+    progressPercent: Math.min(100, Math.round(((record.playtimeHours || 0) / 50) * 100)),
+    subGoal: visual?.subGoal || 'Main Campaign Quest',
+  };
+}
+
+function mapLibraryRecord(record) {
+  const visual = mockGames.find((game) => game.title.toLowerCase() === record.title.toLowerCase());
+  return {
+    ...record,
+    coverImage: visual?.coverImage || '/images/eldenring.jpg',
+    availablePlatforms: record.availablePlatforms || [record.platform],
+    tag: visual?.tag || null,
+    progressPercent: Math.min(100, Math.round((record.playtimeHours / 50) * 100)),
+    subGoal: visual?.subGoal || 'Main Campaign Quest',
+  };
+}
+
 /**
  * Service providing database-like queries and mutations for My Library.
  * Fully integrated with Member 3's Java Backend & JDBC Server.
@@ -263,6 +293,7 @@ export const libraryService = {
     }
 
     const removed = userLibraryState.splice(index, 1)[0];
+    notifyLibraryChanged();
     return removed;
   },
 };

@@ -561,7 +561,7 @@ export default function AchievementsPage() {
                   {trackedGames.length} Tracked Games • {telemetry?.totalMilestonesAvailable || 0} Total Milestones
                 </span>
               </div>
-              <h2 className="ach-banner-title">VALENCE ARCHIVE PROTOCOL</h2>
+              <h2 className="ach-banner-title">GAME VAULT</h2>
               <p className="ach-banner-desc">
                 Comprehensive overview of all unlocked milestones, collection challenges, and gamer score accrued across your library.
               </p>

@@ -198,14 +198,14 @@ export default function FriendsPage() {
               className={`friends-tab-btn ${activeTab === 'active' ? 'active' : ''}`}
               onClick={() => setActiveTab('active')}
             >
-              <span>ACTIVE ({telemetry?.activeInSessionCount || 3})</span>
+              <span>ACTIVE ({telemetry?.activeInSessionCount ?? 0})</span>
             </button>
             <button
               type="button"
               className={`friends-tab-btn ${activeTab === 'all' ? 'active' : ''}`}
               onClick={() => setActiveTab('all')}
             >
-              <span>ALL FRIENDS ({friends.length || 6})</span>
+              <span>ALL FRIENDS ({friends.length})</span>
             </button>
             <button
               type="button"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 
@@ -12,8 +12,10 @@ import FriendsPage from './pages/FriendsPage';
 import ReviewsPage from './pages/ReviewsPage';
 import SettingsPage from './pages/SettingsPage';
 import NotFoundPage from './pages/NotFoundPage';
+import { startPresenceHeartbeat } from './services/presenceService';
 
 export default function App() {
+  useEffect(() => startPresenceHeartbeat(1), []);
   return (
     <BrowserRouter>
       <Routes>

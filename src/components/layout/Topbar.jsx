@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, RefreshCw, Bell } from 'lucide-react';
+import { Search, RefreshCw } from 'lucide-react';
 import './Topbar.css';
 
 export default function Topbar() {
@@ -50,16 +50,6 @@ export default function Topbar() {
         >
           <RefreshCw size={13} className={`sync-icon text-gold ${isSyncing ? 'animate-spin' : ''}`} />
           <span>{isSyncing ? 'Syncing...' : 'Sync Vault'}</span>
-        </button>
-
-        {/* Notifications Button */}
-        <button
-          type="button"
-          className="topbar-icon-btn notification-btn"
-          title="Notifications"
-        >
-          <Bell size={16} />
-          <span className="notification-dot" />
         </button>
 
         {/* Vertical Divider */}

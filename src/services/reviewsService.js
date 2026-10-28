@@ -209,6 +209,25 @@ export const reviewsService = {
    * Get filtered and sorted reviews joined with game metadata and user library ownership
    */
   async getReviews(userId = 1, filters = {}) {
+    if (!USE_MOCK) {
+      const [raw, games, library] = await Promise.all([apiRequest(`/reviews?voterId=${userId}`), apiRequest('/games'), apiRequest(`/users/${userId}/library`)]);
+      let joined = raw.map(r => {
+        const game = games.find(g => g.id === r.gameId) || {};
+        return { ...r, ratingLabel: `${r.rating}/10`, gameTitle: game.title || r.gameTitle,
+          gameCover: game.coverImage || '/images/eldenring.jpg', gameDeveloper: game.developer || '',
+          gameReleaseYear: game.releaseYear, gameGenres: game.genres || [], avgGameRating: game.avgRating || r.rating,
+          isUserReview: r.userId === userId, isOwnedByCurrentUser: library.some(e => e.gameId === r.gameId),
+          userPlaytime: library.find(e => e.gameId === r.gameId)?.playtimeHours || 0 };
+      });
+      const { viewTab='all', ratingFilter='all', gameId='all', search='', sortBy='highest' } = filters;
+      if (viewTab === 'my_reviews' || ratingFilter === 'my_verified') joined = joined.filter(r => r.userId === userId);
+      if (ratingFilter === 'masterpiece') joined = joined.filter(r => r.rating >= 9.5);
+      if (ratingFilter === 'positive') joined = joined.filter(r => r.rating >= 7 && r.rating < 9.5);
+      if (gameId !== 'all') joined = joined.filter(r => r.gameId === Number(gameId));
+      if (search) joined = joined.filter(r => `${r.gameTitle} ${r.gameDeveloper} ${r.quote} ${r.authorName}`.toLowerCase().includes(search.toLowerCase()));
+      joined.sort((a,b) => sortBy === 'newest' ? new Date(b.postedDate)-new Date(a.postedDate) : b.rating-a.rating);
+      return joined;
+    }
     await simulateDelay(120);
 
     const {
@@ -343,6 +362,16 @@ export const reviewsService = {
    * Get aggregate review stats and telemetry metrics
    */
   async getReviewStats(userId = 1) {
+    if (!USE_MOCK) {
+      const [all, library] = await Promise.all([apiRequest(`/reviews?voterId=${userId}`), apiRequest(`/users/${userId}/library`)]);
+      const mine = all.filter(r => r.userId === userId);
+      const avg = mine.length ? mine.reduce((n,r)=>n+r.rating,0)/mine.length : 0;
+      const reviewed = new Set(mine.map(r=>r.gameId));
+      const distribution = {10:0,9:0,8:0,7:0,6:0,5:0};
+      all.forEach(r => { const k = Math.max(5, Math.min(10, Math.floor(r.rating))); distribution[k]++; });
+      return { reviewsPenned:mine.length, percentageReviewed:library.length?((mine.length/library.length)*100).toFixed(1):'0.0',
+        avgRatingGiven:avg.toFixed(1),totalHelpful:mine.reduce((n,r)=>n+(r.helpfulCount||0),0),unreviewedCount:library.filter(e=>!reviewed.has(e.gameId)).length,totalEvaluations:all.length,distribution };
+    }
     await simulateDelay(80);
 
     const userReviews = reviewsState.filter((r) => r.userId === userId);
@@ -390,6 +419,11 @@ export const reviewsService = {
    * Get user's owned games eligible for review
    */
   async getEligibleOwnedGames(userId = 1) {
+    if (!USE_MOCK) {
+      const [library, games, mine] = await Promise.all([apiRequest(`/users/${userId}/library`), apiRequest('/games'), apiRequest(`/users/${userId}/reviews`)]);
+      return library.map(e => { const g=games.find(x=>x.id===e.gameId)||{}; const review=mine.find(r=>r.gameId===e.gameId)||null;
+        return { gameId:e.gameId,title:e.title||g.title,developer:e.developer||g.developer,coverImage:g.coverImage||'/images/eldenring.jpg',playtimeHours:e.playtimeHours,platform:e.platform,hasReviewed:!!review,existingReview:review }; });
+    }
     await simulateDelay(60);
 
     const userLibrary = mockUserLibrary.filter((e) => e.userId === userId);
@@ -419,6 +453,11 @@ export const reviewsService = {
    * 2. Rating range: rating MUST be between 1 and 10.
    */
   async submitReview(userId = 1, { gameId, rating, headline, quote, recommend = true, spoilers = false }) {
+    if (!USE_MOCK) {
+      if (!quote?.trim()) throw new Error('Please enter review text.');
+      const result = await apiRequest(`/users/${userId}/reviews`, apiJson('POST', { gameId:Number(gameId), rating:Math.round(Number(rating)), reviewText:quote.trim() }));
+      return { ...result, isUserReview:true, ratingLabel:`${result.rating}/10`, headline:headline||'', quote:result.quote, recommend, spoilers };
+    }
     await simulateDelay(150);
 
     const numGameId = Number(gameId);
@@ -513,6 +552,13 @@ export const reviewsService = {
    * Delete a review authored by the user
    */
   async deleteReview(reviewId, userId = 1) {
+    if (!USE_MOCK) {
+      const own = await apiRequest(`/users/${userId}/reviews`);
+      const review = own.find(r => r.id === Number(reviewId));
+      if (!review) throw new Error('Review not found for this user.');
+      await apiRequest(`/users/${userId}/reviews/${review.gameId}`, { method:'DELETE' });
+      return review;
+    }
     await simulateDelay(120);
 
     const index = reviewsState.findIndex(
@@ -530,6 +576,12 @@ export const reviewsService = {
    * Toggle helpful vote on a review
    */
   async toggleHelpfulVote(reviewId) {
+    if (!USE_MOCK) {
+      const list=await apiRequest('/reviews?voterId=1');
+      const review=list.find(r=>r.id===Number(reviewId));
+      if(!review) throw new Error('Review not found.');
+      return apiRequest(`/reviews/${review.userId}/${review.gameId}/helpful?voterId=1`,{method:'POST'});
+    }
     await simulateDelay(60);
 
     const review = reviewsState.find((r) => r.id === Number(reviewId));

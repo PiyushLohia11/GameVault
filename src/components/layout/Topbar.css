@@ -125,38 +125,6 @@
   color: var(--accent-primary);
 }
 
-/* Notification Icon Button */
-.topbar-icon-btn {
-  position: relative;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #A1A1AA;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.topbar-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
-}
-
-.notification-dot {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--accent-primary);
-  box-shadow: 0 0 6px rgba(244, 191, 78, 0.6);
-}
-
 /* Vertical Hairline Divider */
 .topbar-divider {
   width: 1px;

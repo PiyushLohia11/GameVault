@@ -2,6 +2,8 @@ import { mockAchievements, mockUserAchievements } from '../mockData/achievements
 import { mockGames } from '../mockData/games';
 import { mockUserLibrary } from '../mockData/userLibrary';
 import { simulateDelay } from './apiConfig';
+import { USE_MOCK } from './apiConfig';
+import { apiRequest, apiJson } from './apiClient';
 
 // In-memory relational state for user achievements during the session
 let userAchievementsState = [...mockUserAchievements];
@@ -21,6 +23,25 @@ export const achievementService = {
    * @param {number} userId 
    */
   async getTrackedGames(userId = 1) {
+    if (!USE_MOCK) {
+      const [games, entries, achievements] = await Promise.all([
+        apiRequest('/games'), apiRequest(`/users/${userId}/library`), apiRequest(`/users/${userId}/achievements`),
+      ]);
+      const groups = new Map();
+      achievements.forEach((a) => { const list = groups.get(a.gameId) || []; list.push(a); groups.set(a.gameId, list); });
+      return [...groups].map(([gameId, list]) => {
+        const game = games.find((g) => g.id === gameId) || {};
+        const library = entries.find((e) => e.gameId === gameId) || {};
+        const unlocked = list.filter((a) => a.isUnlocked);
+        const totalPoints = list.reduce((n, a) => n + a.points, 0);
+        const pointsEarned = unlocked.reduce((n, a) => n + a.points, 0);
+        return { id: gameId, title: game.title, developer: game.developer, releaseYear: game.releaseYear,
+          coverImage: game.coverImage || '/images/eldenring.jpg', platforms: game.platforms || [], status: library.status || 'Backlog',
+          playtimeHours: library.playtimeHours || 0, totalAchievements: list.length, unlockedCount: unlocked.length,
+          progressPercent: list.length ? Math.round(unlocked.length / list.length * 100) : 0, totalPoints, pointsEarned,
+          isMastered: unlocked.length === list.length && list.length > 0, lastUnlockDate: unlocked.at(-1)?.unlockedAt || null };
+      });
+    }
     await simulateDelay(60);
 
     // Get list of unique game IDs present in achievements
@@ -83,6 +104,16 @@ export const achievementService = {
    * Joins: USER_ACHIEVEMENT -> ACHIEVEMENT -> GAME
    */
   async getUserAchievements(userId = 1, filters = {}) {
+    if (!USE_MOCK) {
+      let list = await apiRequest(`/users/${userId}/achievements`);
+      const { gameId = null, status = 'all', search = '', sortBy = 'points_desc' } = filters;
+      if (gameId && gameId !== 'all') list = list.filter(a => a.gameId === Number(gameId));
+      if (status === 'unlocked') list = list.filter(a => a.isUnlocked);
+      if (status === 'locked') list = list.filter(a => !a.isUnlocked);
+      if (search) list = list.filter(a => `${a.title} ${a.description} ${a.gameTitle}`.toLowerCase().includes(search.toLowerCase()));
+      list.sort((a,b) => sortBy === 'points_asc' ? a.points-b.points : sortBy === 'alpha' ? a.title.localeCompare(b.title) : b.points-a.points);
+      return list;
+    }
     await simulateDelay(100);
 
     const {
@@ -187,6 +218,17 @@ export const achievementService = {
    * @param {number} userId 
    */
   async getTelemetrySummary(userId = 1) {
+    if (!USE_MOCK) {
+      const list = await apiRequest(`/users/${userId}/achievements`);
+      const unlocked = list.filter(a => a.isUnlocked);
+      const groups = new Map(); list.forEach(a => groups.set(a.gameId, (groups.get(a.gameId)||0)+1));
+      const mastered = [...groups].filter(([id,total]) => list.filter(a=>a.gameId===id&&a.isUnlocked).length===total).length;
+      const earned = unlocked.reduce((n,a)=>n+a.points,0), possible=list.reduce((n,a)=>n+a.points,0);
+      return { totalPointsAccrued:earned,totalPossiblePoints:possible,pointsYieldPercent:possible?((earned/possible)*100).toFixed(1):'0.0',monthlyDelta:'0',
+        totalMilestonesUnlocked:unlocked.length,totalMilestonesAvailable:list.length,milestoneYieldPercent:list.length?((unlocked.length/list.length)*100).toFixed(1):'0.0',
+        milestonesRemaining:list.length-unlocked.length,gamesMasteredCount:mastered,totalGamesTracked:groups.size,
+        gamesMasteredPercent:groups.size?((mastered/groups.size)*100).toFixed(1):'0.0',averageCompletionRate:groups.size?((unlocked.length/list.length)*100).toFixed(1):'0.0' };
+    }
     await simulateDelay(60);
 
     const all = mockAchievements.map((ach) => {
@@ -255,6 +297,13 @@ export const achievementService = {
    * @param {number} userId 
    */
   async toggleAchievementUnlock(achievementId, userId = 1) {
+    if (!USE_MOCK) {
+      const current = (await apiRequest(`/users/${userId}/achievements`)).find(a => a.id === Number(achievementId));
+      if (!current) return { success: false, message: 'Achievement not found' };
+      if (current.isUnlocked) return { success: false, message: 'Oracle records unlocked achievements; they cannot be relocked here.' };
+      await apiRequest(`/users/${userId}/achievements`, apiJson('POST', { achievementId: Number(achievementId) }));
+      return { success: true, achievementId: Number(achievementId), isUnlocked: true };
+    }
     await simulateDelay(80);
 
     const index = userAchievementsState.findIndex(

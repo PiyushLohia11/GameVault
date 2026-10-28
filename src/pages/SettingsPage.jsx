@@ -789,7 +789,7 @@ export default function SettingsPage() {
       {/* ------------------------------------------------------------------- */}
       <footer className="settings-system-footer">
         <div className="settings-footer-brand">
-          <span className="brand">VALENCE</span>
+          <span className="brand">GAME VAULT</span>
           <span style={{ color: 'rgba(255, 255, 255, 0.2)' }}>|</span>
           <span>Tactile Liquid Glass Gaming Archive • Build 8842-PROD</span>
         </div>

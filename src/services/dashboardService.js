@@ -16,6 +16,25 @@ export const dashboardService = {
    * @param {boolean} simulateEmpty - when true, returns empty sets to test empty states
    */
   async getDashboardData(userId = 1, simulateEmpty = false) {
+    if (!USE_MOCK) {
+      const [games, library, achievements] = await Promise.all([
+        apiRequest('/games'), apiRequest(`/users/${userId}/library`), apiRequest(`/users/${userId}/achievements`),
+      ]);
+      const records = simulateEmpty ? [] : library;
+      const byStatus = status => records.filter(e=>e.status?.toLowerCase()===status.toLowerCase()).length;
+      const totalPlaytimeHours = records.reduce((n,e)=>n+(e.playtimeHours||0),0);
+      const continuePlaying = records.filter(e=>e.status==='Playing').map(e=>{
+        const g=games.find(x=>x.id===e.gameId)||{}; return { ...e,title:e.title||g.title,developer:e.developer||g.developer,genres:g.genres||[],avgRating:g.avgRating,coverImage:g.coverImage||'/images/eldenring.jpg',progressPercent:0 };
+      });
+      const genreMap={}; records.forEach(e=>{const g=games.find(x=>x.id===e.gameId);(g?.genres||[]).forEach(name=>genreMap[name]=(genreMap[name]||0)+(e.playtimeHours||0));});
+      const totalGenre=Object.values(genreMap).reduce((a,b)=>a+b,0);
+      const playtimeByGenre=Object.entries(genreMap).map(([genre,hours])=>({genre,hours,percentage:totalGenre?Math.round(hours/totalGenre*100):0})).sort((a,b)=>b.hours-a.hours).slice(0,4);
+      const unlocked=achievements.filter(a=>a.isUnlocked), pointsEarned=unlocked.reduce((n,a)=>n+a.points,0), totalPoints=achievements.reduce((n,a)=>n+a.points,0);
+      return { user:{username:'GameVault User'}, summary:{ownedCount:records.length,completedCount:byStatus('Completed'),playingCount:byStatus('Playing'),backlogCount:byStatus('Backlog'),totalPlaytimeHours,completedRate:records.length?((byStatus('Completed')/records.length)*100).toFixed(1):'0.0',perfectRuns:0},
+        continuePlaying,recentActivity:[],playtimeByGenre,totalCategorizedHours:totalGenre,
+        backlogDistribution:['Playing','Completed','Backlog'].map(status=>({status,count:byStatus(status),percentage:records.length?Math.round(byStatus(status)/records.length*100):0,color:`var(--status-${status.toLowerCase()})`})),
+        achievementStats:{totalUnlocked:unlocked.length,totalAvailable:achievements.length,pointsEarned,totalPoints,percentage:totalPoints?Math.round(pointsEarned/totalPoints*100):0,featured:unlocked[0]||null} };
+    }
     await simulateDelay(150);
 
     if (simulateEmpty) {

@@ -26,6 +26,16 @@ export const friendsService = {
    * @param {object} filters 
    */
   async getFriends(userId = 1, filters = {}) {
+    if (!USE_MOCK) {
+      let list = await apiRequest(`/users/${userId}/friends`);
+      const { tab='all', search='', sortBy='alpha' } = filters;
+      list = list.map(f => ({ ...f, id:f.friendId, displayName:f.username, status:f.status || 'offline', statusLabel:f.status || 'offline',
+        curatorTitle:'GameVault member', friendSince:f.sinceDate, endpointId:`USER-${f.friendId}`, mutualTitlesCount:0 }));
+      if (tab === 'active') list = list.filter(f => f.status === 'online' || f.status === 'playing');
+      if (search) list = list.filter(f => `${f.username} ${f.email}`.toLowerCase().includes(search.toLowerCase()));
+      list.sort((a,b) => sortBy === 'alpha' ? a.username.localeCompare(b.username) : 0);
+      return list;
+    }
     await simulateDelay(80);
 
     const {
@@ -151,6 +161,18 @@ export const friendsService = {
    * @param {number} userId 
    */
   async getFriendComparison(friendId, userId = 1) {
+    if (!USE_MOCK) {
+      const [friends, mine, theirs, games] = await Promise.all([
+        apiRequest(`/users/${userId}/friends`), apiRequest(`/users/${userId}/library`), apiRequest(`/users/${friendId}/library`), apiRequest('/games'),
+      ]);
+      const friend = friends.find(f => f.friendId === Number(friendId)); if (!friend) return null;
+      const mineMap = new Map(mine.map(e=>[e.gameId,e]));
+      const mutualGames = theirs.filter(e=>mineMap.has(e.gameId)).map(e=>{
+        const g=games.find(x=>x.id===e.gameId)||{}; const yourHours=mineMap.get(e.gameId).playtimeHours||0; const friendHours=e.playtimeHours||0;
+        return { gameId:e.gameId,title:g.title||e.title,coverImage:'/images/eldenring.jpg',yourHours,friendHours,yourPct:50,friendPct:50,leadUser:yourHours===friendHours?'tied':yourHours>friendHours?'you':'friend',leadText:`You ${yourHours>=friendHours?'':'do not '}lead`,milestoneNote:'Shared library title' };
+      });
+      return { friend:{...friend,displayName:friend.username}, macro:{yourOwnedCount:mine.length,friendOwnedCount:theirs.length,mutualCount:mutualGames.length,yourMasteredCount:mine.filter(e=>e.status==='Completed').length,friendMasteredCount:theirs.filter(e=>e.status==='Completed').length}, mutualGames, activities:[] };
+    }
     await simulateDelay(90);
 
     const friend = friendUsersState.find((u) => u.id === Number(friendId));
@@ -226,15 +248,16 @@ export const friendsService = {
     const friendMasteredCount = friend.masteredTitles || 41;
 
     return {
-      friend,
-      macro: {
-        yourOwnedCount: 142, // Canonical total vault catalogue titles
-        friendOwnedCount,
-        mutualCount: mutualGames.length > 0 ? mutualGames.length : 34,
-        yourMasteredCount: 38,
-        friendMasteredCount,
-      },
-      mutualGames,
+        friend,
+          macro: {
+            yourOwnedCount: userLibrary.length,
+            friendOwnedCount,
+            mutualCount: mutualGames.length,
+            yourMasteredCount: userLibrary.filter(
+              game => game.status?.toLowerCase() === "completed"
+            ).length,
+            friendMasteredCount,
+        },
       activities: activities.length > 0 ? activities : [
         {
           id: 99,
@@ -254,6 +277,9 @@ export const friendsService = {
    * @param {number} userId 
    */
   async getPendingRequests(userId = 1) {
+    if (!USE_MOCK) {
+      return apiRequest(`/users/${userId}/friend-requests`);
+    }
     await simulateDelay(60);
 
     const pending = friendshipsState.filter(
@@ -279,6 +305,7 @@ export const friendsService = {
    * Accept an incoming friend request
    */
   async acceptRequest(requestId) {
+    if (!USE_MOCK) return apiRequest(`/users/1/friend-requests/${requestId}`,apiJson('PATCH',{status:'ACCEPTED'}));
     await simulateDelay(100);
 
     const idx = friendshipsState.findIndex((f) => f.id === requestId);
@@ -297,6 +324,7 @@ export const friendsService = {
    * Decline an incoming friend request
    */
   async declineRequest(requestId) {
+    if (!USE_MOCK) return apiRequest(`/users/1/friend-requests/${requestId}`,apiJson('PATCH',{status:'DECLINED'}));
     await simulateDelay(80);
 
     friendshipsState = friendshipsState.filter((f) => f.id !== requestId);
@@ -307,6 +335,12 @@ export const friendsService = {
    * Send a new friend invitation by username or endpoint
    */
   async sendFriendRequest(aliasOrEndpoint, userId = 1) {
+    if (!USE_MOCK) {
+      const username=aliasOrEndpoint.trim();
+      if (!username) return { success:false,message:'Enter a username.' };
+      const result=await apiRequest(`/users/${userId}/friend-requests`,apiJson('POST',{username}));
+      return { ...result,message:`Friend request sent to ${username}.` };
+    }
     await simulateDelay(120);
 
     const trimmed = aliasOrEndpoint.trim();
@@ -354,6 +388,10 @@ export const friendsService = {
    * @param {number} userId 
    */
   async getNetworkTelemetry(userId = 1) {
+    if (!USE_MOCK) {
+      const [friends] = await Promise.all([apiRequest(`/users/${userId}/friends`)]);
+      return { linkedPeersCount:friends.length,activeInSessionCount:friends.filter(f=>['online','playing'].includes(f.status)).length,mutualTitlesCount:0,libraryOverlapPercent:'0%',playtimeDifferentialLead:'0h',networkMasteryCount:0 };
+    }
     await simulateDelay(50);
 
     const acceptedFriends = friendshipsState.filter(
