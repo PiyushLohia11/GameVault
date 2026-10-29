@@ -7,6 +7,7 @@ import {
 import { mockUserLibrary } from '../mockData/userLibrary';
 import { mockGames } from '../mockData/games';
 import { simulateDelay, USE_MOCK, API_BASE_URL } from './apiConfig';
+import { apiRequest, apiJson } from './apiClient';
 
 // In-memory state for the active session
 let friendshipsState = [...mockFriendships];

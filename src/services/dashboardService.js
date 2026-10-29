@@ -4,6 +4,7 @@ import { mockUserLibrary } from '../mockData/userLibrary';
 import { mockAchievements } from '../mockData/achievements';
 import { mockRecentActivity } from '../mockData/activity';
 import { simulateDelay, USE_MOCK, API_BASE_URL } from './apiConfig';
+import { apiRequest, apiJson } from './apiClient';
 
 /**
  * Service providing aggregated queries for the Dashboard.

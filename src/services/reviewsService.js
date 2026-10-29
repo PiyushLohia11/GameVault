@@ -1,6 +1,7 @@
 import { mockGames } from '../mockData/games';
 import { mockUserLibrary } from '../mockData/userLibrary';
 import { simulateDelay, USE_MOCK, API_BASE_URL } from './apiConfig';
+import { apiRequest, apiJson } from './apiClient';
 
 /**
  * Initial Relational Reviews Database State
